@@ -1,9 +1,9 @@
 import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
 
-const TextEdit = () => {
+const CreateText = () => {
   const editor = useRef(null);
-  const [content, setContent] = useState("whts youmind");
+  const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [preView, setPreview] = useState(null);
   const handelChange = (e) => {
@@ -48,4 +48,4 @@ const TextEdit = () => {
   );
 };
 
-export default TextEdit;
+export default CreateText;

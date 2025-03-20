@@ -1,10 +1,15 @@
 import { FaPlus } from "react-icons/fa6";
+import TextEdit from "./TextEdit";
+import CreateText from "./CreateText";
 const Projects = () => {
   return (
     <div>
       <div className="flex justify-between items-center">
         <h2 className="uppercase text-4xl">Project</h2>
-        <button className="flex justify-between py-[10px] px-[35px] items-center gap-[15px] bg-blue-700 text-white rounded-lg">
+        <button
+          onClick={() => document.getElementById("my_modal_4").showModal()}
+          className="flex justify-between py-[10px] px-[35px] items-center gap-[15px] bg-blue-700 text-white rounded-lg"
+        >
           <span>Create Project</span> <FaPlus />
         </button>
       </div>
@@ -35,7 +40,12 @@ const Projects = () => {
                 </p>
               </td>
               <td className="p-4">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                <button
+                  onClick={() =>
+                    document.getElementById("my_modal_2").showModal()
+                  }
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                >
                   Edit
                 </button>
                 <button className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
@@ -46,6 +56,28 @@ const Projects = () => {
           </tbody>
         </table>
       </div>
+      <dialog id="my_modal_4" className="modal">
+        <div className="modal-box w-11/12 max-w-5xl">
+          <CreateText />
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+      <dialog id="my_modal_2" className="modal">
+        <div className="modal-box w-11/12 max-w-5xl">
+          <TextEdit />
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };
