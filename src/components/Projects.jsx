@@ -58,7 +58,7 @@ const Projects = () => {
       </div>
       <dialog id="my_modal_4" className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
-          <CreateText />
+          <CreateText text="project" />
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button, it will close the modal */}
@@ -69,7 +69,7 @@ const Projects = () => {
       </dialog>
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
-          <TextEdit />
+          <TextEdit text="project" />
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button, it will close the modal */}

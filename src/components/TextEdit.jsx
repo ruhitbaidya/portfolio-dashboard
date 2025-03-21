@@ -1,7 +1,7 @@
 import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
 
-const TextEdit = () => {
+const TextEdit = ({ text }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("whts youmind");
   const [image, setImage] = useState(null);
@@ -12,7 +12,7 @@ const TextEdit = () => {
   };
   const handelSubmit = (e) => {
     e.preventDefault();
-    console.log({ image, content });
+    console.log({ image, content, text });
   };
   return (
     <div>

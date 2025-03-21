@@ -1,5 +1,6 @@
 import { FaPlus } from "react-icons/fa6";
 import CreateText from "./CreateText";
+import TextEdit from "./TextEdit";
 
 const Blogs = () => {
   return (
@@ -62,7 +63,7 @@ const Blogs = () => {
           </div>
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
-              <CreateText />
+              <CreateText text="blog" />
               <div className="modal-action">
                 <form method="dialog">
                   {/* if there is a button, it will close the modal */}
@@ -73,7 +74,7 @@ const Blogs = () => {
           </dialog>
           <dialog id="my_modal_6" className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
-              <CreateText />
+              <TextEdit text="blog" />
               <div className="modal-action">
                 <form method="dialog">
                   {/* if there is a button, it will close the modal */}
