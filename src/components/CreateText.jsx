@@ -1,5 +1,8 @@
 import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
+import { port } from "../config/config";
+import { postApi } from "../config/ApiCalling";
+import { imageUpload } from "../utils/ImageUpload";
 
 const CreateText = ({ text }) => {
   const editor = useRef(null);
@@ -10,8 +13,26 @@ const CreateText = ({ text }) => {
     setImage(e.target.files[0]);
     setPreview(URL.createObjectURL(e.target.files[0]));
   };
-  const handelSubmit = (e) => {
+  const handelSubmit = async (e) => {
     e.preventDefault();
+    const imageup = await imageUpload(image);
+    console.log(imageup);
+    if (imageup?.data?.display_url) {
+      if (text === "project") {
+        const res = await postApi(`${port}/create-project`, {
+          image: imageup?.data?.display_url,
+          content,
+        });
+        console.log(res);
+        console.log(imageup?.data?.display_url);
+      } else if (text === "blog") {
+        const res = await postApi(`${port}/create-blog`, {
+          image: imageup?.data?.display_url,
+          content,
+        });
+        console.log(res);
+      }
+    }
     console.log({ image, content, text });
   };
   return (

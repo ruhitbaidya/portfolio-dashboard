@@ -8,17 +8,14 @@ const Skills = () => {
   const [text, setText] = useState("");
   const handelSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", image);
-    const res = await imageUpload(formData);
-    console.log(res.data.url);
-    if (res.data.url) {
+    const res = await imageUpload(image);
+    if (res.data.display_url) {
       const imgset = await fetch(`http://localhost:5000/create-skills`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ image: res?.data?.url, title: text }),
+        body: JSON.stringify({ image: res?.data?.display_url, title: text }),
       });
       const result = await imgset.json();
       console.log(result);

@@ -29,7 +29,7 @@ const TextEdit = ({ text }) => {
                 onChange={handelChange}
               />
             </div>
-            <div>
+            <div className="list-disc">
               <JoditEditor
                 ref={editor}
                 value={content}
