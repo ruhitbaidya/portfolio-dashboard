@@ -1,19 +1,59 @@
 import JoditEditor from "jodit-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { patchApi } from "../config/ApiCalling";
+import { port } from "../config/config";
+import { imageUpload } from "../utils/ImageUpload";
 
-const TextEdit = ({ text }) => {
+const TextEdit = ({ data, text }) => {
   const editor = useRef(null);
-  const [content, setContent] = useState("whts youmind");
+  const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [preView, setPreview] = useState(null);
   const handelChange = (e) => {
     setImage(e.target.files[0]);
     setPreview(URL.createObjectURL(e.target.files[0]));
   };
-  const handelSubmit = (e) => {
+  console.log(data);
+  const handelSubmit = async (e) => {
     e.preventDefault();
+    let senddata = {};
+    if (content && image) {
+      const res = await imageUpload(image);
+      if (res.data.display_url) {
+        senddata = {
+          content,
+          image: res.data.display_url,
+        };
+      }
+    } else if (content) {
+      senddata = {
+        content,
+      };
+    } else if (image) {
+      const res = await imageUpload(image);
+      if (res.data.display_url) {
+        senddata = {
+          image: res.data.display_url,
+        };
+      }
+    }
     console.log({ image, content, text });
+    if (text === "project") {
+      const res = await patchApi(
+        `${port}/update-project/${data._id}`,
+        senddata
+      );
+      console.log(res);
+    } else if (text === "blog") {
+      const res = await patchApi(`${port}/update-blog/${data._id}`, senddata);
+      console.log(res);
+    }
   };
+
+  useEffect(() => {
+    setPreview(data?.image);
+    setContent(data?.content);
+  }, [data]);
   return (
     <div>
       <div className="">

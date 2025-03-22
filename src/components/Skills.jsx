@@ -9,6 +9,7 @@ const Skills = () => {
   const handelSubmit = async (e) => {
     e.preventDefault();
     const res = await imageUpload(image);
+    console.log(res);
     if (res.data.display_url) {
       const imgset = await fetch(`http://localhost:5000/create-skills`, {
         method: "POST",
@@ -27,6 +28,7 @@ const Skills = () => {
     if (type === "file" && files[0]) {
       setDisImage(URL.createObjectURL(files[0]));
       setImage(files[0]);
+      console.log(files[0]);
     } else if (type === "text") {
       setText(value);
     }
