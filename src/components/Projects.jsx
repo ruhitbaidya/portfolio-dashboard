@@ -4,6 +4,7 @@ import CreateText from "./CreateText";
 import { useEffect, useState } from "react";
 import { deleteApi, getApi } from "../config/ApiCalling";
 import { port } from "../config/config";
+
 const Projects = () => {
   const [editData, setEditData] = useState(null);
   const [project, setProject] = useState(null);
@@ -37,47 +38,49 @@ const Projects = () => {
         </button>
       </div>
       <div className="mt-[30px]">
-        <table className="table">
-          <thead className="bg-blue-600 text-white">
-            <tr>
-              <th className="p-4 text-left">Image</th>
-              <th className="p-4 text-left">Content</th>
-              <th className="p-4 text-left">Action</th>
+        <table className="w-full table-fixed">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="w-1/3 p-4">Image</th>
+              <th className="w-1/3 p-4">Content</th>
+              <th className="w-1/3 p-4">Actions</th>
             </tr>
           </thead>
           <tbody>
             {project &&
               project.map((item) => (
-                <>
-                  <tr className="border-b hover:bg-gray-50 transition">
-                    <td className="p-4">
-                      <img
-                        className="w-16 h-16 rounded-lg object-cover"
-                        src={item.image}
-                        alt="Blog"
-                      />
-                    </td>
-                    <td className="p-4">{item.content}</td>
-                    <td className="p-4">
-                      <button
-                        onClick={() => {
-                          document.getElementById("my_modal_2").showModal();
-                          handelEditData(item);
-                        }}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handelDelete(item._id)}
-                        className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </>
+                <tr
+                  key={item._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  <td className="w-1/3 p-4">
+                    <img
+                      className="h-[300px] w-full rounded-lg object-cover"
+                      src={item.image}
+                      alt="Blog"
+                    />
+                  </td>
+                  <td className="w-1/3 p-4">
+                    <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                  </td>
+                  <td className="w-1/3 p-4">
+                    <button
+                      onClick={() => {
+                        document.getElementById("my_modal_2").showModal();
+                        handelEditData(item);
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handelDelete(item._id)}
+                      className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
               ))}
           </tbody>
         </table>

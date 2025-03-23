@@ -67,7 +67,11 @@ const Blogs = () => {
                           </td>
                           <td className="p-4">
                             <p className="text-lg font-semibold text-gray-800">
-                              {`${item.content}`}
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: item.content,
+                                }}
+                              />
                             </p>
                             <p className="text-gray-600 text-sm">
                               This is my first blog for writing and submitting
