@@ -4,7 +4,6 @@ import TextEdit from "./TextEdit";
 import { useEffect, useState } from "react";
 import { deleteApi, getApi } from "../config/ApiCalling";
 import { port } from "../config/config";
-
 const Blogs = () => {
   const [editData, setEditData] = useState(null);
   const [blog, setBlog] = useState(null);

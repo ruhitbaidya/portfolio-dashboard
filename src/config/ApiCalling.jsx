@@ -1,4 +1,4 @@
-const token = "adf454add5ffa5dsff";
+const token = localStorage.getItem("token");
 export const postApi = async (url, data) => {
   const res = await fetch(`${url}`, {
     method: "POST",
@@ -25,6 +25,7 @@ export const patchApi = async (url, updateData) => {
     method: "PATCH",
     headers: {
       "content-type": "application/json",
+      authorization: token,
     },
     body: JSON.stringify(updateData),
   });
@@ -35,6 +36,9 @@ export const patchApi = async (url, updateData) => {
 export const deleteApi = async (url) => {
   const res = await fetch(url, {
     method: "DELETE",
+    headers: {
+      authorization: token,
+    },
   });
   const result = res.json();
   return result;

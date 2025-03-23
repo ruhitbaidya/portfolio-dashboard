@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { port } from "../config/config";
 import { postApi } from "../config/ApiCalling";
 import { imageUpload } from "../utils/ImageUpload";
-
+import { ToastContainer, toast } from "react-toastify";
 const CreateText = ({ text }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
@@ -23,14 +23,18 @@ const CreateText = ({ text }) => {
           image: imageup?.data?.display_url,
           content,
         });
-        console.log(res);
-        console.log(imageup?.data?.display_url);
+        if (res.message) {
+          toast.success(res.message);
+        }
       } else if (text === "blog") {
         const res = await postApi(`${port}/create-blog`, {
           image: imageup?.data?.display_url,
           content,
         });
-        console.log(res);
+        if (res.message) {
+          toast.success(res.message);
+        }
+        console.log(res.message);
       }
     }
     console.log({ image, content, text });
@@ -38,6 +42,7 @@ const CreateText = ({ text }) => {
   return (
     <div>
       <div className="">
+        <ToastContainer />
         <div>
           <form onSubmit={handelSubmit} className="space-y-6">
             <div className="flex justify-center items-center">

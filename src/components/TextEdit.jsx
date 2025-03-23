@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { patchApi } from "../config/ApiCalling";
 import { port } from "../config/config";
 import { imageUpload } from "../utils/ImageUpload";
-
+import { ToastContainer, toast } from "react-toastify";
 const TextEdit = ({ data, text }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
@@ -43,10 +43,10 @@ const TextEdit = ({ data, text }) => {
         `${port}/update-project/${data._id}`,
         senddata
       );
-      console.log(res);
+      toast.success(res.message);
     } else if (text === "blog") {
       const res = await patchApi(`${port}/update-blog/${data._id}`, senddata);
-      console.log(res);
+      toast.success(res.message);
     }
   };
 
@@ -57,6 +57,7 @@ const TextEdit = ({ data, text }) => {
   return (
     <div>
       <div className="">
+        <ToastContainer />
         <div>
           <form onSubmit={handelSubmit} className="space-y-6">
             <div className="flex justify-center items-center">
