@@ -4,60 +4,86 @@ import { patchApi } from "../config/ApiCalling";
 import { port } from "../config/config";
 import { imageUpload } from "../utils/ImageUpload";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
+
 const TextEdit = ({ data, text }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [preView, setPreview] = useState(null);
+
   const handelChange = (e) => {
     setImage(e.target.files[0]);
     setPreview(URL.createObjectURL(e.target.files[0]));
   };
-  console.log(data);
+
   const handelSubmit = async (e) => {
     e.preventDefault();
-    let senddata = {};
-    if (content && image) {
-      const res = await imageUpload(image);
-      if (res.data.display_url) {
-        senddata = {
-          content,
-          image: res.data.display_url,
-        };
+
+    try {
+      let senddata = {};
+
+      // Handle image upload if an image is selected
+      if (image) {
+        const res = await imageUpload(image);
+        if (res?.data?.display_url) {
+          senddata.image = res.data.display_url;
+        } else {
+          throw new Error("Image upload failed");
+        }
       }
-    } else if (content) {
-      senddata = {
-        content,
-      };
-    } else if (image) {
-      const res = await imageUpload(image);
-      if (res.data.display_url) {
-        senddata = {
-          image: res.data.display_url,
-        };
+
+      // Add content to senddata if it exists
+      if (content) {
+        senddata.content = content;
       }
-    }
-    console.log({ image, content, text });
-    if (text === "project") {
-      const res = await patchApi(
-        `${port}/update-project/${data._id}`,
-        senddata
-      );
-      toast.success(res.message);
-    } else if (text === "blog") {
-      const res = await patchApi(`${port}/update-blog/${data._id}`, senddata);
-      toast.success(res.message);
+
+      // If neither image nor content is provided, show an error
+      if (!image && !content) {
+        toast.error("Please update either the content or the image.");
+        return;
+      }
+
+      // Make the API call based on the type (project or blog)
+      let res;
+      if (text === "project") {
+        res = await patchApi(`${port}/update-project/${data._id}`, senddata);
+      } else if (text === "blog") {
+        res = await patchApi(`${port}/update-blog/${data._id}`, senddata);
+      }
+
+      // Show success message
+      if (res?.message) {
+        toast.success(res.message);
+      } else {
+        throw new Error("Update failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(error.message || "An error occurred. Please try again.");
     }
   };
 
+  // Set initial data when the component mounts or `data` changes
   useEffect(() => {
     setPreview(data?.image);
     setContent(data?.content);
   }, [data]);
+
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000} // Auto close after 3 seconds
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="">
-        <ToastContainer />
         <div>
           <form onSubmit={handelSubmit} className="space-y-6">
             <div className="flex justify-center items-center">
@@ -74,9 +100,8 @@ const TextEdit = ({ data, text }) => {
               <JoditEditor
                 ref={editor}
                 value={content}
-                tabIndex={1} // tabIndex of textarea
-                onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                // onChange={(newContent) => {}}
+                tabIndex={1}
+                onBlur={(newContent) => setContent(newContent)}
               />
             </div>
             <div>

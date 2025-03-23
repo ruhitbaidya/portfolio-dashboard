@@ -11,13 +11,16 @@ const Skills = () => {
     const res = await imageUpload(image);
     console.log(res);
     if (res.data.display_url) {
-      const imgset = await fetch(`http://localhost:5000/create-skills`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ image: res?.data?.display_url, title: text }),
-      });
+      const imgset = await fetch(
+        `https://portfolio-server-theta-seven.vercel.app/create-skills`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ image: res?.data?.display_url, title: text }),
+        }
+      );
       const result = await imgset.json();
       console.log(result);
       setSkills([...skills, result.data]);
@@ -35,9 +38,12 @@ const Skills = () => {
   };
 
   const handelDelete = async (id) => {
-    const res = await fetch(`http://localhost:5000/remove-skill/${id}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `https://portfolio-server-theta-seven.vercel.app/remove-skill/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
     const result = await res.json();
     if (result.data.deletedCount > 0) {
       const delSkill = skills.filter((item) => item._id !== id);
@@ -46,7 +52,7 @@ const Skills = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/get-skills`)
+    fetch(`https://portfolio-server-theta-seven.vercel.app/get-skills`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.data) {
