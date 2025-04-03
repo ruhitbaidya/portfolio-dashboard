@@ -1,1 +1,1 @@
-export const port = "https://portfolio-server-theta-seven.vercel.app";
+export const port = "http://localhost:5000";
