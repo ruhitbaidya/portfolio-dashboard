@@ -1,40 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { imageUpload } from "../utils/ImageUpload";
+import { Icons } from "../utils/dynamicIcons";
 
 const Skills = () => {
+  const [loading, setLoading] = useState(false);
   const [skills, setSkills] = useState(null);
-  const [image, setImage] = useState(null);
-  const [disImage, setDisImage] = useState(null);
+  const [icon, setIcon] = useState(null);
+  const [sendIcons, setSendIcons] = useState("");
   const [text, setText] = useState("");
+
   const handelSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    const res = await imageUpload(image);
-    console.log(res);
-    if (res.data.display_url) {
-      const imgset = await fetch(
-        `https://portfolio-server-theta-seven.vercel.app/create-skills`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ image: res?.data?.display_url, title: text }),
-        }
-      );
-      const result = await imgset.json();
-      console.log(result);
-      setSkills([...skills, result.data]);
-    }
-  };
-  const handelChange = (e) => {
-    const { type, files, value } = e.target;
-    if (type === "file" && files[0]) {
-      setDisImage(URL.createObjectURL(files[0]));
-      setImage(files[0]);
-      console.log(files[0]);
-    } else if (type === "text") {
-      setText(value);
-    }
+    const imgset = await fetch(
+      `https://portfolio-server-theta-seven.vercel.app/create-skills`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ icon: sendIcons, title: text }),
+      }
+    );
+    const result = await imgset.json();
+    console.log(result);
+    // setSkills([...skills, result.data]);
   };
 
   const handelDelete = async (id) => {
@@ -64,23 +53,21 @@ const Skills = () => {
     <div className="w-[60%] mx-auto bg-white p-[20px] rounded-lg">
       <div>
         <form className="space-y-6" onSubmit={handelSubmit}>
-          <div className="flex justify-center items-center">
-            <img
-              className="w-[80px] h-[80px] rounded-lg border"
-              src={disImage}
-              alt="Select Icons PNG Image"
+          <div className="flex justify-center items-center">{icon}</div>
+          <div>
+            <input
+              onChange={(e) => {
+                setIcon(<Icons iconName={e.target.value} size={40} />);
+                setSendIcons(e.target.value.trim());
+              }}
+              type="text"
+              className="w-full border p-[10px] rounded-lg"
+              placeholder="Give only Icons name react-icons"
             />
           </div>
           <div>
             <input
-              onChange={handelChange}
-              type="file"
-              className="w-full border p-[10px] rounded-lg cursor-pointer"
-            />
-          </div>
-          <div>
-            <input
-              onChange={handelChange}
+              onChange={(e) => setText(e.target.value.trim())}
               className="w-full focus:outline-none border p-[10px] rounded-lg"
               type="text"
               placeholder="Enter Skill Name"
@@ -88,7 +75,7 @@ const Skills = () => {
           </div>
           <div>
             <button className="w-full bg-blue-700 py-[10px] text-white rounded-lg cursor-pointer">
-              Submit
+              {loading ? <>Loading...</> : "Submit"}
             </button>
           </div>
         </form>
