@@ -1,0 +1,44 @@
+/* styles/globals.css */
+
+/* For Jodit content specifically */
+.jodit-tailwind-content ul,
+.jodit-tailwind-content ol {
+  list-style: revert !important;
+  padding-left: 1.5em !important;
+  margin: 1em 0 !important;
+}
+
+.jodit-tailwind-content ul {
+  list-style-type: disc !important;
+}
+
+.jodit-tailwind-content ol {
+  list-style-type: decimal !important;
+}
+
+.jodit-tailwind-content li {
+  display: list-item !important;
+  margin-bottom: 0.5em !important;
+}
+
+/* Override Tailwind's reset for Jodit */
+.jodit-container .jodit-wysiwyg {
+  ul, ol {
+    list-style: revert;
+    padding-left: 1.5em;
+    margin: 1em 0;
+  }
+  
+  ul {
+    list-style-type: disc;
+  }
+  
+  ol {
+    list-style-type: decimal;
+  }
+  
+  li {
+    display: list-item;
+    margin-bottom: 0.5em;
+  }
+}

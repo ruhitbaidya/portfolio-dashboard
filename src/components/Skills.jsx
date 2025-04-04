@@ -7,32 +7,36 @@ const Skills = () => {
   const [icon, setIcon] = useState(null);
   const [sendIcons, setSendIcons] = useState("");
   const [text, setText] = useState("");
-
+  const [color, setColor] = useState("");
   const handelSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    const imgset = await fetch(
-      `https://portfolio-server-theta-seven.vercel.app/create-skills`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ icon: sendIcons, title: text }),
-      }
-    );
-    const result = await imgset.json();
-    console.log(result);
-    // setSkills([...skills, result.data]);
+    console.log(sendIcons, text, color);
+    const res = await fetch(`http://localhost:5000/create-skills`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ icon: sendIcons, title: text, color }),
+    });
+    const result = await res.json();
+    if (result.data._id) {
+      setLoading(false);
+      setSendIcons("");
+      setText("");
+      setColor("");
+      setSkills([...skills, result.data]);
+      console.log(result);
+    } else {
+      setLoading(false);
+      console.log(result.data);
+    }
   };
 
   const handelDelete = async (id) => {
-    const res = await fetch(
-      `https://portfolio-server-theta-seven.vercel.app/remove-skill/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const res = await fetch(`http://localhost:5000/remove-skill/${id}`, {
+      method: "DELETE",
+    });
     const result = await res.json();
     if (result.data.deletedCount > 0) {
       const delSkill = skills.filter((item) => item._id !== id);
@@ -41,10 +45,11 @@ const Skills = () => {
   };
 
   useEffect(() => {
-    fetch(`https://portfolio-server-theta-seven.vercel.app/get-skills`)
+    fetch(`http://localhost:5000/get-skills`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.data) {
+          console.log(data?.data);
           setSkills(data?.data);
         }
       });
@@ -74,6 +79,18 @@ const Skills = () => {
             />
           </div>
           <div>
+            <label className="block" htmlFor="">
+              Select Color
+            </label>
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="color-input-btn w-10 h-10 rounded-md cursor-pointer border-2 border-gray-200 hover:border-blue-400 transition-all"
+              title="Choose color"
+            />
+          </div>
+          <div>
             <button className="w-full bg-blue-700 py-[10px] text-white rounded-lg cursor-pointer">
               {loading ? <>Loading...</> : "Submit"}
             </button>
@@ -94,10 +111,10 @@ const Skills = () => {
               skills?.map((item) => (
                 <tr key={item._id}>
                   <td>
-                    <img
-                      className="w-[50px] h-[50px]"
-                      src={item.image}
-                      alt=""
+                    <Icons
+                      iconName={item?.icon}
+                      style={{ color: item?.color }}
+                      size={40}
                     />
                   </td>
                   <td>{item.title}</td>

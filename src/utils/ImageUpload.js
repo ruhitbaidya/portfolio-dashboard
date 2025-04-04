@@ -1,25 +1,37 @@
-export const imageUpload = async (img) => {
-  const formData = new FormData();
-  formData.append("image", img);
-
-  try {
-    const res = await fetch(
-      `https://cors-anywhere.herokuapp.com/https://api.imgbb.com/1/upload?key=8096e51030c03a825538e73342024d1c`,
-      {
-        method: "POST",
-        body: formData,
-        headers: {
-          // Some proxies may require this header
-          "X-Requested-With": "XMLHttpRequest",
-        },
+export const imageUpload = async (imageFile) => {
+  const reader = new FileReader();
+  
+  return new Promise((resolve, reject) => {
+    reader.onload = async (event) => {
+      const base64Image = event.target.result.split(',')[1];
+      
+      try {
+        const formData = new FormData();
+        formData.append('image', base64Image);
+        
+        const response = await fetch(
+          `https://api.imgbb.com/1/upload?key=b5909081a1a389623667a64a68fc33d2`,
+          {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: formData
+          }
+        );
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        resolve(data);
+      } catch (error) {
+        reject(error);
       }
-    );
-
-    if (!res.ok) throw new Error("Upload failed");
-    const result = await res.json();
-    return result;
-  } catch (error) {
-    console.error("Upload error:", error);
-    throw error;
-  }
+    };
+    
+    reader.onerror = reject;
+    reader.readAsDataURL(imageFile);
+  });
 };

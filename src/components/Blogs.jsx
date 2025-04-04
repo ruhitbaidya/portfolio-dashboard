@@ -6,6 +6,7 @@ import { deleteApi, getApi } from "../config/ApiCalling";
 import { port } from "../config/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
+import BlogsForm from "./BlogsForm";
 
 const Blogs = () => {
   const [editData, setEditData] = useState(null);
@@ -137,7 +138,7 @@ const Blogs = () => {
           {/* Modal for creating a blog */}
           <dialog id="my_modal_1" className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
-              <CreateText text="blog" />
+              <BlogsForm />
               <div className="modal-action">
                 <form method="dialog">
                   <button className="btn">Close</button>
