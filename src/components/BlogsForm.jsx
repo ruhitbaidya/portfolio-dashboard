@@ -1,11 +1,9 @@
 import React, { useState, useRef } from "react";
 import JoditEditor from "jodit-react";
 import "./blogForm.css";
-import { imageUpload } from "../utils/ImageUpload";
 import { textToArr } from "../utils/textToarray";
 const BlogsForm = () => {
   const editor = useRef(null);
-  const [preview, setPreview] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(``);
   const [category, setCategory] = useState("");
@@ -14,21 +12,24 @@ const BlogsForm = () => {
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    const res = imageUpload(image);
-    if (res?.data?.display_url) {
-      const dataFi = {
-        title,
-        content,
-        category,
-        image: res?.data?.display_url,
-        tags: textToArr(tags),
-      };
-      console.log(dataFi);
-    } else {
-      console.log("image upload problem");
-    }
-
-    console.log({ title, content, category, image, tags });
+    const dataFi = {
+      title,
+      content,
+      category,
+      image: image,
+      tags: textToArr(tags),
+    };
+    console.log(dataFi);
+    const res = await fetch(`http://localhost:5000/create-blog`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(dataFi),
+    });
+    const result = await res.json();
+    console.log(result);
+    // console.log({ title, content, category, image, tags });
   };
   return (
     <div>
@@ -38,20 +39,15 @@ const BlogsForm = () => {
             <label htmlFor="sel">Select Image</label>
             <input
               onChange={(e) => {
-                const file = e.target.files[0];
-                if (!file) {
-                  return;
-                }
-
+                const file = e.target.value;
                 setImage(file);
-                setPreview(URL.createObjectURL(file));
               }}
-              type="file"
+              type="text"
               className="w-full p-[10px] border rounded-lg"
             />
           </div>
           <div>
-            <img className="w-[200px] h-[200px]" src={preview} alt="no image" />
+            <img className="w-[200px] h-[200px]" src={image} alt="no image" />
           </div>
         </div>
         <div>

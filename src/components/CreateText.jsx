@@ -2,13 +2,12 @@ import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
 import { port } from "../config/config";
 import { postApi } from "../config/ApiCalling";
-import { imageUpload } from "../utils/ImageUpload";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { textToArr } from "../utils/textToarray";
-const CreateText = ({ text }) => {
+const CreateText = () => {
   const {
     register,
     handleSubmit,
@@ -20,18 +19,14 @@ const CreateText = ({ text }) => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
-  const [preView, setPreview] = useState(null);
   const [skills, setSkills] = useState([]);
   const [techanology, setTechanology] = useState([]);
   const [category, setCategory] = useState("");
-  const handelChange = (e) => {
-    setImage(e.target.files[0]);
-    setPreview(URL.createObjectURL(e.target.files[0]));
-  };
 
   const onSubmit = async (data) => {
     setLoading(true);
     const senderData = {
+      image,
       title: data?.title,
       description: content,
       category: category,
@@ -41,36 +36,10 @@ const CreateText = ({ text }) => {
       tags: textToArr(data?.tags),
       advanceFetcher: textToArr(data?.advanceFatcher),
     };
-    try {
-      console.log(image);
-      const imageup = await imageUpload(image);
-      console.log(imageup);
-
-      if (imageup?.data?.display_url) {
-        let res;
-        if (text === "project") {
-          res = await postApi(`${port}/create-project`, {
-            image: imageup?.data?.display_url,
-            content,
-          });
-        } else if (text === "blog") {
-          res = await postApi(`${port}/create-blog`, {
-            image: imageup?.data?.display_url,
-            senderData,
-          });
-        }
-
-        if (res?.message) {
-          setLoading(false);
-          setMessage(text === "project" ? "Project Created" : "Blog Created");
-          toast.success(res.message); // Show success toast
-        }
-      }
-    } catch (error) {
-      setLoading(false);
-      toast.error("An error occurred. Please try again."); // Show error toast
-      console.error("Error:", error);
-    }
+    console.log(senderData);
+    const res = await postApi(`${port}/create-project`, senderData);
+    console.log(res);
+    setMessage("ok done");
   };
 
   useEffect(() => {
@@ -97,14 +66,16 @@ const CreateText = ({ text }) => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex justify-between items-center">
               <div>
+                <label htmlFor="hta">Provied Image URL</label>
                 <input
                   className="w-full border p-[10px] rounded-lg"
-                  type="file"
-                  onChange={handelChange}
+                  type="text"
+                  onChange={(e) => setImage(e.target.value)}
+                  placeholder="Provied Image URL"
                 />
               </div>
               <div className="flex justify-center items-center">
-                <img className="h-[100px]" src={preView} alt="" />
+                <img className="h-[100px]" src={image} alt="" />
               </div>
             </div>
             <div>

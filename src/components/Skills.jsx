@@ -20,6 +20,7 @@ const Skills = () => {
       body: JSON.stringify({ icon: sendIcons, title: text, color }),
     });
     const result = await res.json();
+    console.log(result);
     if (result.data._id) {
       setLoading(false);
       setSendIcons("");
@@ -80,14 +81,14 @@ const Skills = () => {
           </div>
           <div>
             <label className="block" htmlFor="">
-              Select Color
+              Select Color code
             </label>
             <input
-              type="color"
+              type="text"
               value={color}
               onChange={(e) => setColor(e.target.value)}
-              className="color-input-btn w-10 h-10 rounded-md cursor-pointer border-2 border-gray-200 hover:border-blue-400 transition-all"
-              title="Choose color"
+              className="w-full border p-[10px] rounded-lg"
+              placeholder="#hex Color code provied"
             />
           </div>
           <div>
