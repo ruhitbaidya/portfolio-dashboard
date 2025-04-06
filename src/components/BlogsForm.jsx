@@ -20,7 +20,7 @@ const BlogsForm = () => {
       tags: textToArr(tags),
     };
     console.log(dataFi);
-    const res = await fetch(`http://localhost:5000/create-blog`, {
+    const res = await fetch(`https://my-perso-backend.vercel.app/create-blog`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

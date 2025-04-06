@@ -43,7 +43,7 @@ const CreateText = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/get-skills`)
+    fetch(`https://my-perso-backend.vercel.app/get-skills`)
       .then((res) => res.json())
       .then((data) => setSkills(data.data));
   }, []);

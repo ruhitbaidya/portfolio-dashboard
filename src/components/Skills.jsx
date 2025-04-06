@@ -12,13 +12,16 @@ const Skills = () => {
     setLoading(true);
     e.preventDefault();
     console.log(sendIcons, text, color);
-    const res = await fetch(`http://localhost:5000/create-skills`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ icon: sendIcons, title: text, color }),
-    });
+    const res = await fetch(
+      `https://my-perso-backend.vercel.app/create-skills`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ icon: sendIcons, title: text, color }),
+      }
+    );
     const result = await res.json();
     console.log(result);
     if (result.data._id) {
@@ -35,9 +38,12 @@ const Skills = () => {
   };
 
   const handelDelete = async (id) => {
-    const res = await fetch(`http://localhost:5000/remove-skill/${id}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `https://my-perso-backend.vercel.app/remove-skill/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
     const result = await res.json();
     if (result.data.deletedCount > 0) {
       const delSkill = skills.filter((item) => item._id !== id);
@@ -46,7 +52,7 @@ const Skills = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/get-skills`)
+    fetch(`https://my-perso-backend.vercel.app/get-skills`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.data) {
